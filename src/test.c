@@ -10,7 +10,7 @@ int main(int argc, char **argv){
 	
 	if(s != NULL){
 		int i;
-		for(i = 0; i < 1; i++) {
+		for(i = 0; i < 10; i++) {
 			float t = mcp9808_temperature(s);
 			printf("temperature: %0.2f\n", t);
 			usleep(2 * 1000 * 1000);
