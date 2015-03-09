@@ -1,6 +1,6 @@
 # MCP9808
 
-Raspberry Pi C driver for the sensor MCP9808.
+Raspberry Pi C driver and Python bindings for the sensor MCP9808.
 
 
 ## Example Usage
