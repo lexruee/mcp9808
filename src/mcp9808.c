@@ -180,7 +180,7 @@ float mcp9808_temperature(void *_s) {
 	temperature /= 16.0;
 	
 	if(raw_temperature & 0x1000) { // check sign bit
-		temperature *= -1;
+		temperature -= 256.0;
 	}
 	DEBUG("temperature_word: %#x\n",temperature_word);
 	DEBUG("temperature: %0.2f\n",temperature);
