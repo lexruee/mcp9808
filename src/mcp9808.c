@@ -79,8 +79,9 @@ int mcp9808_set_addr(void *_s) {
 	mcp9808_t* s = TO_S(_s);
 	int error;
 
-	if((error = ioctl(s->file, I2C_SLAVE, s->address)) < 0)
+	if((error = ioctl(s->file, I2C_SLAVE, s->address)) < 0) {
 		DEBUG("error: ioctl() failed\n");
+	}
 
 	return error;
 } 
@@ -122,7 +123,7 @@ void *mcp9808_init(int address, const char* i2c_device_filepath) {
 	DEBUG("device: init using address %#x and i2cbus %s\n", address, i2c_device_filepath);
 	
 	void *_s = malloc(sizeof(mcp9808_t));
-	if(_s == NULL)  {
+	if(_s == NULL) {
 		DEBUG("error: malloc returns NULL pointer\n");
 		return NULL;
 	}
@@ -162,6 +163,7 @@ void *mcp9808_init(int address, const char* i2c_device_filepath) {
 	DEBUG("device: manuf_id: 0x%04x, device_id: 0x%04x\n", s->manuf_id, s->device_id);
 
 	DEBUG("device: open ok\n");
+	
 	return _s;
 }
 
