@@ -19,7 +19,6 @@ typedef struct {
 
 static void MCP9808_dealloc(MCP9808_Object *self) {
 	mcp9808_close(self->mcp9808);
-	self->mcp9808 = NULL;
 	self->ob_type->tp_free((PyObject*)self);
 }
 
@@ -41,9 +40,13 @@ static int MCP9808_init(MCP9808_Object *self, PyObject *args, PyObject *kwds) {
 	if(!PyArg_ParseTupleAndKeywords(args, kwds, "is", kwlist, &address, &i2c_device))
 		return -1;
 		
-	if(i2c_device) 
+	if(i2c_device) {
 		self->mcp9808 = mcp9808_init(address, i2c_device);
-
+		if(self->mcp9808 == NULL) {
+			PyErr_SetString(PyExc_RuntimeError, "Cannot initialize sensor. Run program as root and check i2c device / address.");
+			return -1;
+		}
+	}
 	return 0;
 }
 

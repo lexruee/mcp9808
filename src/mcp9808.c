@@ -62,6 +62,7 @@ typedef struct {
  */
 
 int mcp9808_set_addr(void *_s);
+void mcp9808_init_error_cleanup(void *_s);
 
 
 /*
@@ -83,6 +84,25 @@ int mcp9808_set_addr(void *_s) {
 
 	return error;
 } 
+
+
+
+/*
+ * Frees allocated memory in the init function.
+ * 
+ * @param bmp180 sensor
+ */
+void mcp9808_init_error_cleanup(void *_s) {
+	mcp9808_t* s = TO_S(_s);
+	
+	if(s->i2c_device != NULL) {
+		free(s->i2c_device);
+		s->i2c_device = NULL;
+	}
+	
+	free(s);
+	s = NULL;
+}
 
 
 
@@ -113,6 +133,7 @@ void *mcp9808_init(int address, const char* i2c_device_filepath) {
 	s->i2c_device = (char*) malloc(strlen(i2c_device_filepath) * sizeof(char));
 	if(s->i2c_device == NULL) {
 		DEBUG("error: malloc returns NULL pointer!\n");
+		mcp9808_init_error_cleanup(s);
 		return NULL;
 	}
 
@@ -123,12 +144,15 @@ void *mcp9808_init(int address, const char* i2c_device_filepath) {
 	int file;
 	if((file = open(s->i2c_device, O_RDWR)) < 0) {
 		DEBUG("error: %s open() failed\n", s->i2c_device);
+		mcp9808_init_error_cleanup(s);
 		return NULL;
 	}
 	s->file = file;
 	
-	if(mcp9808_set_addr(s) < 0)
+	if(mcp9808_set_addr(s) < 0) {
+		mcp9808_init_error_cleanup(s); 
 		return NULL;
+	}
 		
 	uint16_t manuf_id = (uint16_t) i2c_smbus_read_word_data(s->file, MCP9808_REG_MANUF_ID);
 	uint16_t device_id = (uint16_t) i2c_smbus_read_word_data(s->file, MCP9808_REG_DEVICE_ID);
@@ -149,6 +173,10 @@ void *mcp9808_init(int address, const char* i2c_device_filepath) {
  * @param mcp8909 sensor
  */
 void mcp9808_close(void *_s) {
+	if(_s == NULL) {
+		return;
+	}
+	
 	DEBUG("close device\n");
 	mcp9808_t *s = TO_S(_s);
 	
