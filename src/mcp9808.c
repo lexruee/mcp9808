@@ -91,7 +91,7 @@ int mcp9808_set_addr(void *_s) {
 /*
  * Frees allocated memory in the init function.
  * 
- * @param bmp180 sensor
+ * @param mcp9808 sensor
  */
 void mcp9808_init_error_cleanup(void *_s) {
 	mcp9808_t* s = TO_S(_s);
