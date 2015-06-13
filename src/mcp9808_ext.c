@@ -62,7 +62,7 @@ static PyObject *MCP9808_temperature(MCP9808_Object *self) {
 
 
 static PyMethodDef MCP9808_methods[] = {
-	{"temperature", (PyCFunction) MCP9808_temperature, METH_NOARGS, "Return the temperature value"},
+	{"temperature", (PyCFunction) MCP9808_temperature, METH_NOARGS, "Returns a temperature value"},
 	{NULL}  /* Sentinel */
 };
 
