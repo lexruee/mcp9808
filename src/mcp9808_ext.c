@@ -1,11 +1,11 @@
 /*
  * @author 	Alexander Rüedlinger <a.rueedlinger@gmail.com>
  * @date 	9.03.2015
- * 
+ *
  * Python bindings for the MCP9808 driver written in C.
- * 
+ *
  */
- 
+
 #include <Python.h>
 #include <structmember.h>
 #include "mcp9808.h"
@@ -36,10 +36,10 @@ static int MCP9808_init(MCP9808_Object *self, PyObject *args, PyObject *kwds) {
 	int address;
 	const char *i2c_device;
 	static char *kwlist[] = {"address", "i2c_devcie", NULL};
-	
+
 	if(!PyArg_ParseTupleAndKeywords(args, kwds, "is", kwlist, &address, &i2c_device))
 		return -1;
-		
+
 	if(i2c_device) {
 		self->mcp9808 = mcp9808_init(address, i2c_device);
 		if(self->mcp9808 == NULL) {
@@ -77,7 +77,7 @@ static PyMemberDef MCP9808_members[] = {
 static PyTypeObject MCP9808_Type = {
 	PyObject_HEAD_INIT(NULL)
 	0,                         /*ob_size*/
-	"MCP9808.MCP9808",             /*tp_name*/
+	"tentacle_pi.MCP9808",             /*tp_name*/
 	sizeof(MCP9808_Object),             /*tp_basicsize*/
 	0,                         /*tp_itemsize*/
 	(destructor)MCP9808_dealloc, /*tp_dealloc*/
@@ -126,15 +126,15 @@ static PyMethodDef module_methods[] = {
 
 PyMODINIT_FUNC initMCP9808(void) {
 	PyObject *m;
-	
+
 	if(PyType_Ready(&MCP9808_Type) < 0)
 		return;
-		
+
 	m = Py_InitModule3("MCP9808", module_methods, "MCP9808 extension module");
-	
+
 	if(m == NULL)
 		return;
-		
+
 	Py_INCREF(&MCP9808_Type);
 	PyModule_AddObject(m, "MCP9808", (PyObject *)&MCP9808_Type);
 }
